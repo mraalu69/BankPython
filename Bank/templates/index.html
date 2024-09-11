@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet X</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto p-4 max-w-2xl">
+        <h1 class="text-3xl font-bold mb-8 text-center text-blue-600">Wallet X</h1>
+        
+        <div id="loginSection" class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Login</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="loginPhoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                    <input type="text" id="loginPhoneNumber" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="loginPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Login</button>
+            </form>
+        </div>
+
+        <div id="mainContent" class="hidden">
+            <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Register New User</h2>
+                <form id="registerForm" class="space-y-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input type="text" id="firstName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                    </div>
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input type="text" id="lastName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                    </div>
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="text" id="phoneNumber" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Register</button>
+                </form>
+            </div>
+
+            <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Create Account</h2>
+                <form id="createAccountForm" class="space-y-4">
+                    <div>
+                        <label for="accountPhoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="text" id="accountPhoneNumber" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">Create Account</button>
+                </form>
+            </div>
+
+            <div id="accountActions" class="hidden bg-white shadow-md rounded-lg p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Account Actions</h2>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <button id="depositBtn" class="bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">Deposit</button>
+                    <button id="withdrawBtn" class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">Withdraw</button>
+                    <button id="checkBalanceBtn" class="bg-purple-500 text-white p-2 rounded-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">Check Balance</button>
+                    <button id="profileBtn" class="bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">View Profile</button>
+                </div>
+                <div id="actionForm" class="hidden"></div>
+            </div>
+
+            <button id="logoutBtn" class="w-full bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 mb-6">Logout</button>
+        </div>
+
+        <div id="result" class="bg-white shadow-md rounded-lg p-6 hidden"></div>
+    </div>
+
+    <script>
+        let currentAccountNumber = null;
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const phoneNumber = document.getElementById('loginPhoneNumber').value;
+            const password = document.getElementById('loginPassword').value;
+
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone_number: phoneNumber, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                showResult('Login successful');
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                this.reset();
+            })
+            .catch(error => showResult(`Error: ${error.message}`, true));
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ first_name: firstName, last_name: lastName, phone_number: phoneNumber, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                showResult(`User registered successfully with ID: ${data.user_id}`);
+                this.reset();
+            })
+            .catch(error => showResult(`Error: ${error.message}`, true));
+        });
+
+        document.getElementById('createAccountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const phoneNumber = document.getElementById('accountPhoneNumber').value;
+
+            fetch('/create_account', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone_number: phoneNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                currentAccountNumber = data.account_number;
+                showResult(`Account created successfully. Account Number: ${data.account_number}`);
+                document.getElementById('accountActions').classList.remove('hidden');
+                this.reset();
+            })
+            .catch(error => showResult(`Error: ${error.message}`, true));
+        });
+
+        function showActionForm(action) {
+            const actionForm = document.getElementById('actionForm');
+            actionForm.innerHTML = `
+                <form id="${action}Form" class="space-y-4">
+                    ${action !== 'checkBalance' ? `
+                        <div>
+                            <label for="${action}Amount" class="block text-sm font-medium text-gray-700">Amount</label>
+                            <input type="number" id="${action}Amount" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+                        </div>
+                    ` : ''}
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">${action.charAt(0).toUpperCase() + action.slice(1)}</button>
+                </form>
+            `;
+            actionForm.classList.remove('hidden');
+
+            document.getElementById(`${action}Form`).addEventListener('submit', function(e) {
+                e.preventDefault();
+                const amount = action !== 'checkBalance' ? document.getElementById(`${action}Amount`).value : null;
+                
+                let url = `/${action}`;
+                let method = 'POST';
+                let body = { account_number: currentAccountNumber };
+                
+                if (action === 'checkBalance') {
+                    method = 'GET';
+                    url += `?account_number=${currentAccountNumber}`;
+                    body = null;
+                } else {
+                    body.amount = parseFloat(amount);
+                }
+
+                fetch(url, {
+                    method: method,
+                    headers: method === 'POST' ? { 'Content-Type': 'application/json' } : {},
+                    body: body ? JSON.stringify(body) : null
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) throw new Error(data.error);
+                    showResult(`${action.charAt(0).toUpperCase() + action.slice(1)} successful. ${data.new_balance ? `New balance: ${data.new_balance}` : `Balance: ${data.balance}`}`);
+                    actionForm.classList.add('hidden');
+                })
+                .catch(error => showResult(`Error: ${error.message}`, true));
+            });
+        }
+
+        document.getElementById('depositBtn').addEventListener('click', () => showActionForm('deposit'));
+        document.getElementById('withdrawBtn').addEventListener('click', () => showActionForm('withdraw'));
+        document.getElementById('checkBalanceBtn').addEventListener('click', () => showActionForm('checkBalance'));
+        
+        document.getElementById('profileBtn').addEventListener('click', function() {
+            fetch(`/profile?account_number=${currentAccountNumber}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                showResult(`
+                    <h3 class="font-bold text-lg mb-2">Profile Information</h3>
+                    <p><strong>Name:</strong> ${data.name}</p>
+                    <p><strong>Phone Number:</strong> ${data.phone_number}</p>
+                    <p><strong>Account Number:</strong> ${data.account_number}</p>
+                    <p><strong>Balance:</strong> ${data.balance}</p>
+                `);
+            })
+            .catch(error => showResult(`Error: ${error.message}`, true));
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            fetch('/logout', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                showResult('Logout successful');
+                document.getElementById('loginSection').classList.remove('hidden');
+                document.getElementById('mainContent').classList.add('hidden');
+                document.getElementById('accountActions').classList.add('hidden');
+                currentAccountNumber = null;
+            })
+            .catch(error => showResult(`Error: ${error.message}`, true));
+        });
+
+        function showResult(message, isError = false) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            resultDiv.classList.add(isError ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800');
+        }
+    </script>
+</body>
+</html>
